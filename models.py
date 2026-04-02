@@ -33,7 +33,7 @@ class Account:
         else:
             return "failed"
 
-    def transaction_out(self, amount: float, input_pin: int):
+    def transaction_out(self, amount: float, input_pin: int, counterparty: str):
         return self.withdraw(amount, input_pin, )
 
     def deposit(self, amount: float, input_pin: int):
@@ -44,7 +44,7 @@ class Account:
         else:
             return "failed"
 
-    def transaction_in(self, amount: float, input_pin: int):
+    def transaction_in(self, amount: float, input_pin: int,counterparty: str):
         return self.deposit(amount, input_pin)
 
     def change_pin(self, old_pin: int, new_pin: int):
@@ -60,13 +60,15 @@ class Account:
     # def unblock_account(self):
     #     self.is_blocked = False
 
-    def record_action(self, date_time: dt.datetime, amount: float, type: str):
+    def record_action(self, date_time: dt.datetime, amount: float, type: str, counterparty=None):
         if type in {"withdraw", "deposit", "transaction_in", "transaction_out"}:
             self.actions_log.append({
                 "time": date_time,
                 "amount": amount,
-                "type": type
+                "type": type,
+                "counterparty": counterparty
             })
+        
 
     def actions_log_to_dictionary(self):
         actions_log_dictionary = {}
@@ -75,7 +77,8 @@ class Account:
             actions_log_dictionary[key] = {
                 "time": str(action["time"]),
                 "amount": action["amount"],
-                "type": action["type"]
+                "type": action["type"],
+                "counterparty": action["counterparty"]
                 }
         return actions_log_dictionary
 
