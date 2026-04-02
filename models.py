@@ -81,53 +81,54 @@ class Account:
         return actions_log_dictionary
 
 
-class Bank(Account):
-    accounts = {}
+class Bank:
+    def __init__(self):
+        self._accounts: dict[int, Account] = {}
 
-    def __init__(self, username, balance=0):
-        super().__init__(self.create_account_id(), username, balance)
-        Bank.accounts[self.id] = self
+    def create_account(self, name: str, balance: float = 0) -> Account:
+        account_id = self._generate_id()
+        account = Account(name=name, balance=balance, id=account_id)
+        self._accounts[account_id] = account
+        return account
 
-    @classmethod
-    def create_account_id(cls):
+    def get_account(self, account_id: int):
+        return self._accounts.get(account_id)
+
+    def is_account_created(self, account_id: int) -> bool:
+        return account_id in self._accounts
+
+    def list_all_accounts(self):
+        for account_id, account in self._accounts.items():
+            print(f"ID: {account_id} | Username: {account.name} | Balance: {account.balance} | Active: {account.is_blocked} | PIN: {account.pin}")
+
+    def transaction_to_from_accounts(self, sender_id: int, receiver_id: int, amount: float):
+        if not self.is_account_created(sender_id):
+            return False, "sender account not found"
+        if not self.is_account_created(receiver_id):
+            return False, "receiver account not found"
+        sender = self._accounts[sender_id]
+        if sender.balance < amount:
+            return False, "insufficient balance"
+        self._accounts[sender_id].balance -= amount
+        self._accounts[receiver_id].balance += amount
+        return True, "success"
+
+    def log_in_account(self, account_id: int, pin: int):
+        if not self.is_account_created(account_id):
+            return False, "account not created"
+        account = self._accounts[account_id]
+        if account.is_blocked:
+            return False, "account suspended"
+        if account.check_pin(pin):
+            return True, "logged in"
+        return False, "incorrect PIN"
+
+    def _generate_id(self) -> int:
         account_id = rd.randint(10000, 99999)
-        while account_id in cls.accounts:
+        while account_id in self._accounts:
             account_id = rd.randint(10000, 99999)
         return account_id
 
-    @classmethod
-    def is_account_created(cls, account_id):
-        return account_id in cls.accounts
-
-    @classmethod
-    def list_all_accounts(cls):
-        for account_id, account in cls.accounts.items():
-            print(f"ID: {account_id} | Username: {account.name} | Balance: {account.balance} | Active: {account.is_blocked} | PIN: {account.pin}")
-
     @staticmethod
-    def is_admin_pin(entered_password):
+    def is_admin_pin(entered_password) -> bool:
         return entered_password == os.getenv("ADMIN_SECRET_PASS")
-
-    @classmethod
-    def transaction_to_from_accounts(cls, sender_id, receiver_id, amount):
-        if not cls.is_account_created(sender_id):
-            return False, "sender account not found"
-        if not cls.is_account_created(receiver_id):
-            return False, "receiver account not found"
-        sender = cls.accounts[sender_id]
-        if sender.balance < amount:
-            return False, "insufficient balance"
-        cls.accounts[sender_id].balance -= amount
-        cls.accounts[receiver_id].balance += amount
-        return True
-
-    @classmethod
-    def log_in_account(cls, account_id, pin):
-        if not cls.is_account_created(account_id):
-            return False, "account not created"
-        account = cls.accounts[account_id]
-        if not account.is_active:
-            return False, "account suspend"
-        if pin == account.pin:
-            return True
-        return False, "incorrect PIN"
