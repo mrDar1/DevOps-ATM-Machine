@@ -16,60 +16,51 @@ class Account:
         self.actions_log = []
 
 
-    # def generate_id():
-    #     pass
-
-    def generate_pin(self):
+    def generate_pin(self) -> bool:
         return rd.randint(1000, 9999)
 
-    def check_pin(self, user_input: int):
+    def check_pin(self, user_input: int) ->bool:
         return user_input == self.pin
 
-    def withdraw(self, amount: float, input_pin: int):
+    def withdraw(self, amount: float, input_pin: int) -> bool:
         if self.check_pin(input_pin) and amount > 0.0 and amount < self.balance:
             self.balance -= amount
             self.record_action(dt.datetime.now(), amount, "withdraw")
-            return "success"
+            return True, "success"
         else:
-            return "failed"
+            return False, "failed"
 
-    def transaction_out(self, amount: float, input_pin: int, counterparty: str):
+    def transaction_out(self, amount: float, input_pin: int, counterparty: str) -> bool:
         if self.check_pin(input_pin) and amount > 0.0 and amount < self.balance:
             self.balance -= amount
-            self.record_action(dt.datetime.now(), amount, "withdraw")
-            return "success"
+            self.record_action(dt.datetime.now(), amount, "transaction_out", counterparty)
+            return True, "success"
         else:
-            return "failed"
+            return False, "failed"
 
-    def deposit(self, amount: float, input_pin: int):
+    def deposit(self, amount: float, input_pin: int) -> bool:
         if self.check_pin(input_pin) and amount > 0.0:
             self.balance += amount
             self.record_action(dt.datetime.now(), amount, "deposit")
-            return "success"
+            return True, "success"
         else:
-            return "failed"
+            return False, "failed"
 
-    def transaction_in(self, amount: float, input_pin: int,counterparty: str):
+    def transaction_in(self, amount: float, input_pin: int,counterparty: str) -> bool:
         if self.check_pin(input_pin) and amount > 0.0:
             self.balance += amount
-            self.record_action(dt.datetime.now(), amount, "deposit")
-            return "success"
+            self.record_action(dt.datetime.now(), amount, "transaction_in", counterparty)
+            return True, "success"
         else:
-            return "failed"
+            return False, "failed"
 
-    def change_pin(self, old_pin: int, new_pin: int):
+    def change_pin(self, old_pin: int, new_pin: int) -> bool:
         if self.check_pin(old_pin):
             self.pin = new_pin
-            return "success"
+            return True, "success"
         else:
-            return "failed"
-
-    # def block_account(self):
-    #     self.is_blocked = True
-
-    # def unblock_account(self):
-    #     self.is_blocked = False
-
+            return False, "failed"
+    
     def record_action(self, date_time: dt.datetime, amount: float, type: str, counterparty=None):
         if type in {"withdraw", "deposit", "transaction_in", "transaction_out"}:
             self.actions_log.append({
@@ -78,10 +69,9 @@ class Account:
                 "type": type,
                 "counterparty": counterparty
             })
-        
 
-    def actions_log_to_dictionary(self):
-        actions_log_dictionary = {}
+    def actions_log_to_dictionary(self) -> dict[int, dict]:
+        actions_log_dictionary: dict[int, dict] = {}
         for index, action in enumerate(self.actions_log):
             key = index
             actions_log_dictionary[key] = {
@@ -123,7 +113,7 @@ class Bank:
             return False, "insufficient balance"
         self._accounts[sender_id].balance -= amount
         self._accounts[receiver_id].balance += amount
-        return True, "success"
+        return True, True, "success"
 
     def log_in_account(self, account_id: int, pin: int):
         if not self.is_account_created(account_id):

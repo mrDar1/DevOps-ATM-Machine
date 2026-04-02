@@ -4,7 +4,7 @@ from models import Account
 account1 = Account("David Snir",80,222)
 print(account1.pin)
 print(account1.balance)
-if account1.change_pin(int(input("old pin: ")),int(input("new pin: "))) == "success":
+if account1.change_pin(int(input("old pin: ")),int(input("new pin: "))):
     print("pin changed")
 else:
     print("pin didnt change")
