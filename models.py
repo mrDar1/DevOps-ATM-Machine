@@ -1,9 +1,9 @@
 import datetime as dt
 import random as rd
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
 
 class Account:
@@ -25,27 +25,27 @@ class Account:
     def check_pin(self, user_input: int):
         return user_input == self.pin
 
-    def withdraw(self, amount: float, input_pin: int, action_id: int):
+    def withdraw(self, amount: float, input_pin: int):
         if self.check_pin(input_pin) and amount > 0.0 and amount < self.balance:
             self.balance -= amount
-            self.record_action(action_id, dt.datetime.now(), amount, "withdraw")
+            self.record_action(dt.datetime.now(), amount, "withdraw")
             return "success"
         else:
             return "failed"
 
-    def transaction_out(self, amount: float, input_pin: int, action_id: int):
-        return self.withdraw(amount, input_pin, action_id)
+    def transaction_out(self, amount: float, input_pin: int):
+        return self.withdraw(amount, input_pin, )
 
-    def deposit(self, amount: float, input_pin: int, action_id: int):
+    def deposit(self, amount: float, input_pin: int):
         if self.check_pin(input_pin) and amount > 0.0:
             self.balance += amount
-            self.record_action(action_id, dt.datetime.now(), amount, "deposit")
+            self.record_action(dt.datetime.now(), amount, "deposit")
             return "success"
         else:
             return "failed"
 
-    def transaction_in(self, amount: float, input_pin: int, action_id: int):
-        return self.deposit(amount, input_pin, action_id)
+    def transaction_in(self, amount: float, input_pin: int):
+        return self.deposit(amount, input_pin)
 
     def change_pin(self, old_pin: int, new_pin: int):
         if self.check_pin(old_pin):
@@ -60,10 +60,9 @@ class Account:
     # def unblock_account(self):
     #     self.is_blocked = False
 
-    def record_action(self, action_id: int, date_time: dt.datetime, amount: float, type: str):
+    def record_action(self, date_time: dt.datetime, amount: float, type: str):
         if type in {"withdraw", "deposit", "transaction_in", "transaction_out"}:
             self.actions_log.append({
-                "action_id": action_id,
                 "time": date_time,
                 "amount": amount,
                 "type": type
@@ -71,8 +70,8 @@ class Account:
 
     def actions_log_to_dictionary(self):
         actions_log_dictionary = {}
-        for action in self.actions_log:
-            key = action["action_id"]
+        for index, action in enumerate(self.actions_log):
+            key = index
             actions_log_dictionary[key] = {
                 "time": str(action["time"]),
                 "amount": action["amount"],
