@@ -1,1 +1,1 @@
-# empty for now.
+python-dotenv==1.2.2
