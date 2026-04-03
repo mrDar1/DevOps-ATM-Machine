@@ -115,7 +115,7 @@ class Bank:
         is_success = sender.transaction_out(amount, sender_pin, counterparty=receiver.name)
         if not is_success:
             return False, "failed, check pin and that have enougeh balance"
-        receiver.transaction_in(amount, receiver.pin, counterparty=sender.name)
+        receiver.transaction_in(amount, counterparty=sender.name)
         return True, "success"
 
     def log_in_account(self, account_id: int, pin: int) -> tuple[bool, str]:
