@@ -3,33 +3,29 @@ import datetime as dt
 from models import Bank, Account
 
 
-def save_data(bank) -> None:
-    """take Bank object, convert to dict, write to 'data.json' """
+def _bank_to_dict(bank: Bank) -> dict:
     data = {}
     for account_id, account in bank._accounts.items():
-        data[account_id] = {
-            "id": account.id,
+        data[str(account_id)] = {
             "name": account.name,
-            "pin": account.pin,
             "balance": account.balance,
+            "pin": account.pin,
             "is_blocked": account.is_blocked,
             "actions_log": account.actions_log_to_dictionary()
         }
+    return data
+
+
+def save_data(bank) -> None:
+    """take Bank object, convert to dict, write to 'data.json' """
+    data = _bank_to_dict(bank)
     with open("data.json", "w", encoding="utf-8") as file:
         json.dump(data, file)
 
 
-def load_data() -> Bank:
-    """read from 'data.json', convert to Dict, than convert to Bank object, and return it
-    if there is no file, return a new Bank object with empty accounts"""
-    try:
-        with open("data.json", "r", encoding="utf-8") as file:
-            data = json.load(file)
-    except FileNotFoundError:
-        data = {}
-
+def _dict_to_bank_object(data_as_dict_object: dict) -> Bank:
     bank = Bank()
-    for account_id_str, account_data in data.items():
+    for account_id_str, account_data in data_as_dict_object.items():
         account_id = int(account_id_str)
         account = Account(name=account_data["name"], balance=account_data["balance"], id=account_id)
         account.pin = account_data["pin"]
@@ -44,5 +40,17 @@ def load_data() -> Bank:
             for action in account_data["actions_log"].values()
         ]
         bank._accounts[account_id] = account
-
     return bank
+
+
+def load_data() -> Bank:
+    """read from 'data.json' as Dict, than convert to Bank object, and return it
+    if there is no file, return a new Bank object with empty accounts"""
+    try:
+        with open("data.json", "r", encoding="utf-8") as file:
+            data_as_dict_object = json.load(file)
+    except FileNotFoundError:
+        data_as_dict_object = {}
+
+    data_as_bank_obj = _dict_to_bank_object(data_as_dict_object)
+    return data_as_bank_obj
