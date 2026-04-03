@@ -15,7 +15,7 @@ ACCOUNTS = [
 ]
 
 
-def init_test_data():
+def init_test_with10_people_data():
     bank = Bank()
 
     for name, balance in ACCOUNTS:
@@ -95,7 +95,7 @@ def test_metushelah_4_transfer_to_self():
 
 
 if __name__ == "__main__":
-    init_test_data()
+    init_test_with10_people_data()
     test_load_data()
     test_metushelah_1_withdraw()
     test_metushelah_2_deposit()
