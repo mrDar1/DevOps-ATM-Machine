@@ -4,13 +4,10 @@ from storage import load_data
 
 bank = load_data()
 
+# * shared UI DESIGN for all screens * #
 root = tk.Tk()
 root.title("David & Yuval ©")  # window upper title
 root.geometry("390x844")  # iPhone 14 portrait
-
-# * UI DESIGN of 'Log In' screen - no logic * #
-# * UI DESIGN of 'Log In' screen - no logic * #
-# * UI DESIGN of 'Log In' screen - no logic * #
 
 # for dark background
 root.configure(bg="#1e1e1e")
@@ -19,7 +16,10 @@ style.theme_use("clam")  # required for color overrides
 style.configure("TButton", background="#3c3c3c", foreground="#ffffff")
 style.configure("TLabel",  background="#1e1e1e", foreground="#ffffff")
 # for dark background - end.
+# * shared UI DESIGN for all screens --- finish * #
 
+
+# * UI DESIGN of 'Log In' screen - no logic * #
 # big title:
 title_label = tk.Label(root, text="ATM machine", bg="#1e1e1e", fg="#ffffff", font=("Arial", 16, "bold"))
 title_label.place(relx=0.5, rely=0.05, anchor="center")
@@ -54,15 +54,9 @@ button = tk.Button(root, text="Exit", width=25, command=root.destroy,
 button.place(relx=0.5, rely=0.79, anchor="center")
 
 # * UI DESIGN of 'Log In' screen - no logic -----finish * #
-# * UI DESIGN of 'Log In' screen - no logic -----finish * #
-# * UI DESIGN of 'Log In' screen - no logic -----finish * #
 
 
 # * Logic of 'Login' screen * #
-# * Logic of 'Login' screen * #
-# * Logic of 'Login' screen * #
-
-
 def handle_login():
     account_id_str = account_entry.get()
     pin_str = pin_entry.get()
@@ -82,18 +76,10 @@ def handle_login():
 
 
 login_button.config(command=handle_login)
-
-
-# * Logic of 'Login' screen -----finish * #
-# * Logic of 'Login' screen -----finish * #
 # * Logic of 'Login' screen -----finish * #
 
 
 # * UI DESIGN of 'user Menu' screen - no logic * #
-# * UI DESIGN of 'user Menu' screen - no logic * #
-# * UI DESIGN of 'user Menu' screen - no logic * #
-
-
 def show_user_menu(account_id):
     clear_screen()
 
@@ -104,8 +90,6 @@ def show_user_menu(account_id):
 
     tk.Button(root, text="Log Out", width=25, bg="#3c3c3c", fg="#ffffff",
               activebackground="#555555", command=root.destroy).place(relx=0.5, rely=0.85, anchor="center")
-# * UI DESIGN of 'user Menu' screen - no logic -----finish * #
-# * UI DESIGN of 'user Menu' screen - no logic -----finish * #
 # * UI DESIGN of 'user Menu' screen - no logic -----finish * #
 
 
