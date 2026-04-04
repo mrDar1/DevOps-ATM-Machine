@@ -220,7 +220,52 @@ class ATMApp:
         tk.Button(window, text="Close", command=window.destroy).pack(pady=8)
 
     def handle_change_pin(self):
-        pass
+        window = tk.Toplevel(self.root)
+        window.title("Change PIN")
+        window.geometry("280x220")
+        window.configure(bg="#1e1e1e")
+
+        lbl_cfg = dict(bg="#1e1e1e", fg="#aaaaaa", font=("Arial", 10))
+        entry_cfg = dict(width=22, show="*", bg="#2e2e2e", fg="#ffffff",
+                         insertbackground="#ffffff", relief="flat", font=("Arial", 12))
+
+        tk.Label(window, text="Current PIN", **lbl_cfg).pack(pady=(18, 2))
+        current_entry = tk.Entry(window, **entry_cfg)
+        current_entry.pack()
+
+        tk.Label(window, text="New PIN", **lbl_cfg).pack(pady=(10, 2))
+        new_entry = tk.Entry(window, **entry_cfg)
+        new_entry.pack()
+
+        tk.Label(window, text="Verify New PIN", **lbl_cfg).pack(pady=(10, 2))
+        verify_entry = tk.Entry(window, **entry_cfg)
+        verify_entry.pack()
+
+        def confirm_change():
+            try:
+                old_pin = int(current_entry.get())
+                new_pin = int(new_entry.get())
+                verify_pin = int(verify_entry.get())
+            except ValueError:
+                messagebox.showerror("Error", "PIN must be a number", parent=window)
+                return
+
+            if new_pin != verify_pin:
+                messagebox.showerror("Error", "New PINs do not match", parent=window)
+                return
+
+            account = self.bank.get_account(self.current_account_id)
+            if account.change_pin(old_pin, new_pin):
+                self.current_pin = new_pin
+                save_data(self.bank)
+                messagebox.showinfo("Success", "PIN changed successfully", parent=window)
+                window.destroy()
+            else:
+                messagebox.showerror("Error", "Current PIN is incorrect", parent=window)
+
+        tk.Button(window, text="Change PIN", bg="#3c3c3c", fg="#ffffff",
+                  activebackground="#555555", relief="flat",
+                  command=confirm_change).pack(pady=14)
 
     def handle_exit(self):
         self.root.destroy()
