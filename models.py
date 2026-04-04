@@ -19,10 +19,14 @@ class Account:
     def generate_pin(self) -> int:
         return rd.randint(1000, 9999)
 
-    def check_pin(self, user_input: int) -> bool:
-        return user_input == self.pin
+    def check_pin(self, user_input: str) -> bool:
+        if user_input.isdigit():
+            user_input = int(user_input)
+            return user_input == self.pin
+        else:
+            return False
 
-    def withdraw(self, amount: float, input_pin: int) -> bool:
+    def withdraw(self, amount: float, input_pin: str) -> bool:
         if self.check_pin(input_pin) and amount > 0.0 and amount <= self.balance:
             self.balance -= amount
             self.record_action(dt.datetime.now(), amount, "withdraw")
@@ -30,7 +34,7 @@ class Account:
         else:
             return False
 
-    def transaction_out(self, amount: float, input_pin: int, counterparty: str) -> bool:
+    def transaction_out(self, amount: float, input_pin: str, counterparty: str) -> bool:
         if self.check_pin(input_pin) and amount > 0.0 and amount <= self.balance:
             self.balance -= amount
             self.record_action(dt.datetime.now(), amount, "transaction_out", counterparty)
@@ -38,7 +42,7 @@ class Account:
         else:
             return False
 
-    def deposit(self, amount: float, input_pin: int) -> bool:
+    def deposit(self, amount: float, input_pin: str) -> bool:
         if self.check_pin(input_pin) and amount > 0.0:
             self.balance += amount
             self.record_action(dt.datetime.now(), amount, "deposit")
@@ -54,9 +58,9 @@ class Account:
         else:
             return False
 
-    def change_pin(self, old_pin: int, new_pin: int) -> bool:
-        if self.check_pin(old_pin):
-            self.pin = new_pin
+    def change_pin(self, old_pin: str, new_pin: str) -> bool:
+        if self.check_pin(old_pin) and new_pin.isdigit() and len(new_pin) < 5:
+            self.pin = int(new_pin)
             return True
         else:
             return False
