@@ -3,7 +3,6 @@ import tkinter as tk
 from tkinter import ttk
 from models import Bank
 import styles
-
 # Fix pixelation on Windows
 # try:
 #     ctypes.windll.shcore.SetProcessDpiAwareness(1)
@@ -16,6 +15,7 @@ import styles
 class ATMApp(tk.Tk):
     def __init__(self, bank: Bank):
         super().__init__()
+        self.bank = bank
         self.title("DevOps ATM")
         # self.geometry(f"{styles.window_width}x{styles.window_hight}")
         self.resizable(False, False)
@@ -42,6 +42,8 @@ class ATMApp(tk.Tk):
 class LoginPage(ttk.Frame):
     def __init__(self, parent, controller):
         # Configure Styles for this page
+        self.bank: Bank = controller.bank
+
         self.style = ttk.Style()
         self.style.theme_use('clam')
         
@@ -188,6 +190,21 @@ class LoginPage(ttk.Frame):
             self,
             text="SHH_AUTHENTICATE",
             style="Login.TButton",
-            cursor="hand2"
+            cursor="hand2",
+            command=self.login_button_acion
         )
         self.auth_button.pack(pady=(20, 102), padx=62, fill="x", anchor="w")
+    
+    def login_button_acion(self):
+        input_id: str = self.id_entry.get()
+        input_pin: str = self.pin_entry.get()
+        if input_id.isdigit() and input_pin.isdigit():
+            login: tuple = self.bank.log_in_account(account_id=int(input_id),pin=int(input_pin))
+            if login[0]:
+                print(login[1])
+            else:
+                print(login[1])   
+        else:
+            print("invalid input")
+            
+

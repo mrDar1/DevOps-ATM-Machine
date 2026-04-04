@@ -20,6 +20,7 @@ class Account:
         return rd.randint(1000, 9999)
 
     def check_pin(self, user_input: str) -> bool:
+        user_input = str(user_input)
         if user_input.isdigit():
             user_input = int(user_input)
             return user_input == self.pin
