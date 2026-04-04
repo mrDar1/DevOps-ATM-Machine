@@ -102,7 +102,7 @@ class ATMApp:
         tk.Button(btn_frame, text="Send",       **btn_cfg).pack(pady=5)
         tk.Button(btn_frame, text="History",    **btn_cfg).pack(pady=5)
         tk.Button(btn_frame, text="Change PIN", **btn_cfg).pack(pady=5)
-        tk.Button(btn_frame, text="Exit", command=self.root.destroy,
+        tk.Button(btn_frame, text="Exit entire App", command=self.root.destroy,
                   width=25, bg="#5a1a1a", fg="#ffffff",
                   activebackground="#7a2a2a", font=("Arial", 11), relief="flat").pack(pady=5)
 
