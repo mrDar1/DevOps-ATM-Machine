@@ -186,10 +186,73 @@ class ATMApp:
         tk.Button(window, text="Withdraw", command=confirm_withdraw).pack(pady=10)
 
     def handle_transfer(self):
-        pass
+        window = tk.Toplevel(self.root)
+        window.title("Transfer")
+        window.geometry("280x200")
+
+        tk.Label(window, text="Destination ID:").pack(pady=(14, 2))
+        dest_entry = tk.Entry(window)
+        dest_entry.pack(pady=2)
+
+        tk.Label(window, text="Amount:").pack(pady=(10, 2))
+        amount_entry = tk.Entry(window)
+        amount_entry.pack(pady=2)
+
+        def confirm_transfer():
+            # validate destination ID input
+            try:
+                dest_id = int(dest_entry.get())
+            except ValueError:
+                messagebox.showerror("Error", "Destination ID must be a number", parent=window)
+                return
+
+            # validate amount input
+            try:
+                amount = float(amount_entry.get())
+                if amount <= 0:
+                    raise ValueError
+            except ValueError:
+                messagebox.showerror("Error", "Amount must be a positive number", parent=window)
+                return
+
+            # same account check
+            if dest_id == self.current_account_id:
+                messagebox.showerror("Error", "Cannot transfer to your own account", parent=window)
+                return
+
+            # destination exists check
+            dest_account = self.bank.get_account(dest_id)
+            if dest_account is None:
+                messagebox.showerror("Error", f"Account {dest_id} does not exist", parent=window)
+                return
+
+            # destination blocked check
+            if dest_account.is_blocked:
+                messagebox.showerror("Error", "Destination account is blocked", parent=window)
+                return
+
+            # sufficient balance check
+            sender = self.bank.get_account(self.current_account_id)
+            if amount > sender.balance:
+                messagebox.showerror("Error", "Insufficient balance", parent=window)
+                return
+
+            success, message = self.bank.transaction_to_from_accounts(
+                self.current_account_id, dest_id, amount, self.current_pin
+            )
+            if success:
+                save_data(self.bank)
+                self.balance_label.config(text=f"Balance: ${sender.balance:,.2f}")
+                messagebox.showinfo("Success", f"Transferred ${amount:,.2f} to account {dest_id}", parent=window)
+                window.destroy()
+            else:
+                messagebox.showerror("Error", message, parent=window)
+
+        tk.Button(window, text="Transfer", command=confirm_transfer).pack(pady=14)
 
     def handle_history(self):
-        """use fitussi first easier option - 'insert(tk.End, text) and not 'tk.Text' and "STATE=DISABLED" to make it read-only, because we have only 'read' and no 'write' needs"""
+        """use fitussi first easier option: 'insert(tk.End, text) and not
+        'tk.Text' and "STATE=DISABLED" to make it read-only, because easier and only 'read'"""
         account = self.bank.get_account(self.current_account_id)
         window = tk.Toplevel(self.root)
         window.title("Transaction History")
