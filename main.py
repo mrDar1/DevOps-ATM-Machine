@@ -8,6 +8,9 @@ root = tk.Tk()
 root.title("David & Yuval ©")  # window upper title
 root.geometry("390x844")  # iPhone 14 portrait
 
+# * UI DESIGN of 'Log In' screen - no logic * #
+# * UI DESIGN of 'Log In' screen - no logic * #
+# * UI DESIGN of 'Log In' screen - no logic * #
 
 # for dark background
 root.configure(bg="#1e1e1e")
@@ -50,22 +53,14 @@ button = tk.Button(root, text="Exit", width=25, command=root.destroy,
                    bg="#3c3c3c", fg="#ffffff", activebackground="#555555")
 button.place(relx=0.5, rely=0.79, anchor="center")
 
+# * UI DESIGN of 'Log In' screen - no logic -----finish * #
+# * UI DESIGN of 'Log In' screen - no logic -----finish * #
+# * UI DESIGN of 'Log In' screen - no logic -----finish * #
 
-def clear_screen():
-    for widget in root.winfo_children():
-        widget.destroy()
 
-
-def show_user_menu(account_id):
-    clear_screen()
-
-    tk.Label(root, text="User Menu", bg="#1e1e1e", fg="#ffffff",
-             font=("Arial", 16, "bold")).place(relx=0.5, rely=0.1, anchor="center")
-    tk.Label(root, text=f"Account: {account_id}", bg="#1e1e1e", fg="#aaaaaa",
-             font=("Arial", 11)).place(relx=0.5, rely=0.2, anchor="center")
-
-    tk.Button(root, text="Log Out", width=25, bg="#3c3c3c", fg="#ffffff",
-              activebackground="#555555", command=root.destroy).place(relx=0.5, rely=0.85, anchor="center")
+# * Logic of 'Login' screen * #
+# * Logic of 'Login' screen * #
+# * Logic of 'Login' screen * #
 
 
 def handle_login():
@@ -87,6 +82,37 @@ def handle_login():
 
 
 login_button.config(command=handle_login)
+
+
+# * Logic of 'Login' screen -----finish * #
+# * Logic of 'Login' screen -----finish * #
+# * Logic of 'Login' screen -----finish * #
+
+
+# * UI DESIGN of 'user Menu' screen - no logic * #
+# * UI DESIGN of 'user Menu' screen - no logic * #
+# * UI DESIGN of 'user Menu' screen - no logic * #
+
+
+def show_user_menu(account_id):
+    clear_screen()
+
+    tk.Label(root, text="User Menu", bg="#1e1e1e", fg="#ffffff",
+             font=("Arial", 16, "bold")).place(relx=0.5, rely=0.1, anchor="center")
+    tk.Label(root, text=f"Account: {account_id}", bg="#1e1e1e", fg="#aaaaaa",
+             font=("Arial", 11)).place(relx=0.5, rely=0.2, anchor="center")
+
+    tk.Button(root, text="Log Out", width=25, bg="#3c3c3c", fg="#ffffff",
+              activebackground="#555555", command=root.destroy).place(relx=0.5, rely=0.85, anchor="center")
+# * UI DESIGN of 'user Menu' screen - no logic -----finish * #
+# * UI DESIGN of 'user Menu' screen - no logic -----finish * #
+# * UI DESIGN of 'user Menu' screen - no logic -----finish * #
+
+
+def clear_screen():
+    """we use single-window design, so to navigate to new screen must clear it first"""
+    for widget in root.winfo_children():
+        widget.destroy()
 
 
 root.mainloop()
