@@ -141,4 +141,7 @@ class Bank:
 
     @staticmethod
     def is_admin_pin(entered_password) -> bool:
-        return entered_password == os.getenv("ADMIN_SECRET_PASS")
+        secret = os.getenv("ADMIN_SECRET_PASS")
+        if not entered_password or not secret:
+            return False
+        return entered_password == secret
