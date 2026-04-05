@@ -71,7 +71,7 @@ class Account:
             self.actions_log.append({
                 "time": date_time,
                 "amount": amount,
-                "type": type,
+                "type": action_type,
                 "counterparty": counterparty
             })
 

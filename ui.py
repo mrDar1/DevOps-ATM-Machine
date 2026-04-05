@@ -1,8 +1,9 @@
 # import ctypes
 import tkinter as tk
 from tkinter import ttk
-from models import Bank
+from models import Bank, Account
 import styles
+import datetime as dt
 # Fix pixelation on Windows
 # try:
 #     ctypes.windll.shcore.SetProcessDpiAwareness(1)
@@ -16,6 +17,7 @@ class ATMApp(tk.Tk):
     def __init__(self, bank: Bank):
         super().__init__()
         self.bank = bank
+        self.account: Account
         self.title("DevOps ATM")
         # self.geometry(f"{styles.window_width}x{styles.window_hight}")
         self.resizable(False, False)
@@ -39,11 +41,113 @@ class ATMApp(tk.Tk):
         frame.tkraise()
     
 
+class LogPage(ttk.Frame):
+    def __init__(self, parent, controller):
+        self.bank: Bank = controller.bank
+        self.account: Account = controller.account
+        # self.account: Account = controller.account
+        super().__init__(parent, style="Log.TFrame")
+        self.controller = controller
+
+
+        # Configure Styles for this page
+        self.style = ttk.Style()
+        self.style.theme_use('clam')
+
+        self.page_titles()
+
+        self.actions_log: list[dict[dt.datetime, float, str, str]] = self.account.actions_log
+
+        for action in self.actions_log:
+            new_card: tk.Frame = self.log_card(amount=action["amount"],datetime=action["time"],action_type=action["type"],counter_party=action["counterparty"])
+            new_card.pack(pady=5, padx=62, fill="x")
+
+    def page_titles(self):
+         # Frame styles
+        
+        self.style.configure("Log.TFrame", background=styles.color_dark_bg)
+        # Label styles
+        self.style.configure("LogTitle.TLabel", 
+                             background=styles.color_dark_bg, 
+                             foreground=styles.color_terminal_green,
+                             font=styles.font_page_title)
+        
+        self.style.configure("LogIcon.TLabel", 
+                             background=styles.color_dark_bg, 
+                             foreground=styles.color_terminal_yellow,
+                             font=styles.font_page_title)
+        
+        self.style.configure("LogSubtitle.TLabel", 
+                             background=styles.color_dark_bg, 
+                             foreground=styles.color_text_color,
+                             font=styles.font_page_sub_title)
+        
+        #---titles---
+        self.title_frame = ttk.Frame(self, style="Log.TFrame")
+        self.title_frame.pack(pady=(102, 0), padx=62, fill="x")
+        
+        self.page_title = ttk.Label(
+            self.title_frame, 
+            text=".LOG", 
+            style="LogTitle.TLabel"
+        )
+        self.page_title.pack(side="left")
+        
+        self.log_icon_image = tk.PhotoImage(file="images/archive icon.png")
+
+        self.page_icon = tk.Label(
+            self.title_frame,
+            background=styles.color_dark_bg,
+            image=self.log_icon_image,
+            borderwidth=0,
+            highlightthickness=0
+        )
+        self.page_icon.pack(side="top",anchor="ne")
+        
+        self.page_subtitle = ttk.Label(
+            self, 
+            text="Past_Activities", 
+            style="LogSubtitle.TLabel"
+        )
+        self.page_subtitle.pack(pady=(0, 20), padx=62, anchor="w")
+
+    def log_card(self, amount: float, datetime: dt.datetime, action_type: str, counter_party: str) -> tk.Frame: #counter_party
+        frame_outside = tk.Frame(self,background=styles.color_less_dark_bg, height=2)
+        frame_inside = tk.Frame(frame_outside, background=styles.color_dark_bg)
+        amount_lable = tk.Label(frame_inside, text=("₪"+str(amount)),font=styles.font_button, foreground=styles.color_text_color,background=styles.color_dark_bg)
+        datetime_label = tk.Label(frame_inside, text=datetime.strftime("%d/%m/%y %H:%M"), background=styles.color_dark_bg, font=styles.font_detils, foreground=styles.color_text_color)
+        if action_type == "withdraw":
+            action_type_label = tk.Label(frame_inside, text="WITHDRAW",font=styles.font_field, background=styles.color_dark_bg, foreground=styles.color_terminal_red)
+            action_counterparty_label = tk.Label(frame_inside, text=counter_party,font=styles.font_detils, background=styles.color_dark_bg, foreground=styles.color_text_color)
+        elif action_type == "deposit":
+            action_type_label = tk.Label(frame_inside, text="DEPOSIT",font=styles.font_field, background=styles.color_dark_bg, foreground=styles.color_terminal_green)
+            action_counterparty_label = tk.Label(frame_inside, text=counter_party,font=styles.font_detils, background=styles.color_dark_bg, foreground=styles.color_text_color)
+        elif action_type == "transaction_in":
+            action_type_label = tk.Label(frame_inside, text="FROM",font=styles.font_field, background=styles.color_dark_bg, foreground=styles.color_terminal_green)
+            action_counterparty_label = tk.Label(frame_inside, text=counter_party,font=styles.font_detils, background=styles.color_dark_bg, foreground=styles.color_text_color)
+        elif action_type == "transaction_out":
+            action_type_label = tk.Label(frame_inside, text="TO",font=styles.font_field, background=styles.color_dark_bg, foreground=styles.color_terminal_red)
+            action_counterparty_label = tk.Label(frame_inside, text=counter_party,font=styles.font_detils, background=styles.color_dark_bg, foreground=styles.color_text_color)
+        else:
+            action_type_label = tk.Label(frame_inside, text="Error",font=styles.font_field, background=styles.color_dark_bg, foreground=styles.color_terminal_yellow)
+
+        frame_inside.pack(side="top", fill="x", pady=(0, 2))
+        frame_inside.grid_columnconfigure(0, weight=1)
+
+        amount_lable.grid(row=0, sticky="nw")
+        action_type_label.grid(row=0, sticky="ne")
+        datetime_label.grid(row=1, sticky="sw")
+        action_counterparty_label.grid(row=1, sticky="se")
+
+
+        return frame_outside
+
+
 class LoginPage(ttk.Frame):
     def __init__(self, parent, controller):
-        # Configure Styles for this page
         self.bank: Bank = controller.bank
 
+        # Configure Styles for this page
         self.style = ttk.Style()
         self.style.theme_use('clam')
         
@@ -96,6 +200,7 @@ class LoginPage(ttk.Frame):
 
         super().__init__(parent, style="Login.TFrame")
         self.controller = controller
+        self.parent = parent
         
         #---titles---
         self.title_frame = ttk.Frame(self, style="Login.TFrame")
@@ -204,6 +309,14 @@ class LoginPage(ttk.Frame):
             login: tuple = self.bank.log_in_account(account_id=int(input_id),pin=int(input_pin))
             if login[0]:
                 print(login[1])
+
+                self.controller.account: Account = self.bank.get_account(int(input_id))
+
+                frame = LogPage(parent=self.parent, controller=self.controller)
+                self.controller.frames[LogPage] = frame
+                frame.grid(row=0, column=0, sticky="nsew")
+
+                self.controller.show_frame(LogPage)
             else:
                 print(login[1])   
         else:
