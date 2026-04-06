@@ -8,6 +8,7 @@ class ATMApp:
         self.bank = load_data()
 
         # * shared UI DESIGN for all screens * #
+        # * shared UI DESIGN for all screens * #
         self.root = tk.Tk()
         self.root.title("David & Yuval © ATM")  # window upper title
         self.root.geometry("390x844")  # iPhone 14 portrait
@@ -20,7 +21,9 @@ class ATMApp:
         style.configure("TLabel",  background="#1e1e1e", foreground="#ffffff")
         # for dark background - end.
         # * shared UI DESIGN for all screens --- finish * #
+        # * shared UI DESIGN for all screens --- finish * #
 
+    # * UI DESIGN + Logic of 'Log In' screen * #
     # * UI DESIGN + Logic of 'Log In' screen * #
     def show_login_screen(self):
         self.clear_screen()
@@ -82,7 +85,9 @@ class ATMApp:
                   bg="#3c3c3c", fg="#ffffff", activebackground="#555555").place(relx=0.5, rely=0.79, anchor="center")
 
     # * UI DESIGN + Logic of 'Log In' screen -----finish * #
+    # * UI DESIGN + Logic of 'Log In' screen -----finish * #
 
+    # * UI DESIGN of 'user Menu' screen - no logic * #
     # * UI DESIGN of 'user Menu' screen - no logic * #
     def show_user_menu(self, account_id):
         self.clear_screen()
@@ -130,7 +135,9 @@ class ATMApp:
                   activebackground="#555555", font=("Arial", 10), relief="flat",
                   command=self.show_login_screen).place(relx=0.5, rely=0.94, anchor="center")
     # * UI DESIGN of 'user Menu' screen - no logic -----finish * #
+    # * UI DESIGN of 'user Menu' screen - no logic -----finish * #
 
+    # * Logic of 'user Menu' screen  * #
     # * Logic of 'user Menu' screen  * #
     def handle_deposit(self):
         window = tk.Toplevel(self.root)
@@ -340,7 +347,9 @@ class ATMApp:
     def handle_exit(self):
         self.root.destroy()
     # * Logic of 'user Menu' screen -----finish * #
+    # * Logic of 'user Menu' screen -----finish * #
 
+    # * UI of 'Admin Zone' screen * #
     # * UI of 'Admin Zone' screen * #
     def show_admin_zone(self):
         self.clear_screen()
@@ -371,7 +380,9 @@ class ATMApp:
                   command=self.show_login_screen).place(relx=0.5, rely=0.94, anchor="center")
 
     # * UI of 'Admin Zone' screen -----finish * #
+    # * UI of 'Admin Zone' screen -----finish * #
 
+    # * Logic of 'Admin Zone' screen * #
     # * Logic of 'Admin Zone' screen * #
     def handle_watch_accounts(self):
         window = tk.Toplevel(self.root)
@@ -489,7 +500,6 @@ class ATMApp:
         tree.pack(side="left", fill="both", expand=True, padx=(10, 0))
         scrollbar.pack(side="left", fill="y")
 
-
     def handle_create_account(self):
         window = tk.Toplevel(self.root)
         window.title("Create New Account")
@@ -556,7 +566,9 @@ class ATMApp:
         submit_btn.pack(pady=(12, 4))
 
     # * Logic of 'Admin Zone' screen -----finish * #
+    # * Logic of 'Admin Zone' screen -----finish * #
 
+    # * shared logic of all screens * #
     # * shared logic of all screens * #
     def clear_screen(self):
         """we use single-window design, so to navigate to new screen must clear it first"""
@@ -566,4 +578,5 @@ class ATMApp:
     def run(self):
         self.show_login_screen()
         self.root.mainloop()
+    # * shared logic of all screens -----finish * #
     # * shared logic of all screens -----finish * #
