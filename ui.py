@@ -2,6 +2,7 @@
 import tkinter as tk
 from tkinter import ttk
 from models import Bank, Account
+import storage
 import styles
 import datetime as dt
 # Fix pixelation on Windows
@@ -13,6 +14,8 @@ import datetime as dt
 #     except Exception:
 #         pass
 
+# after each action, for save data use:
+# storage.save_data(self.bank)
 
 class ATMApp(tk.Tk):
     def __init__(self, bank: Bank):
