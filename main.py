@@ -1,11 +1,9 @@
 """2 options for UI: Fimga Design or Regular, uncomment your choice and comment the other one"""
-import storage
-
-# Regular UI
+# * Regular UI
 # import ui
 # ui.ATMApp().run()
 
-# Figma Design UI
+# * Figma Design UI
 import storage
 import figma_ui
 
