@@ -1,3 +1,4 @@
+"""the 'basic' (not figma) ui design"""
 import tkinter as tk
 from tkinter import ttk, messagebox, simpledialog
 from storage import load_data, save_data
@@ -8,7 +9,7 @@ from style import (BG, BG_CARD, BG_TREE, BTN, BTN_ACTIVE,
 
 
 class ATMApp:
-    # const shortcut config for many shared button:
+    # const configuration for many shared buttons:
     BTN_CFG = dict(width=25, bg=BTN, fg=FG,
                    activebackground=BTN_ACTIVE, font=("Arial", 11), relief="flat")
 
@@ -28,13 +29,15 @@ class ATMApp:
         style.configure("TButton", background=BTN, foreground=FG)
         style.configure("TLabel",  background=BG,  foreground=FG)
         # for dark background - end.
-        # * shared UI DESIGN for all screens --- finish * #
-        # * shared UI DESIGN for all screens --- finish * #
 
-    def _add_logout_button(self):
+    def shared_log_out_backward_button(self):
+        """to be use when return to 'log in' screen from user menu or admin zone"""
         tk.Button(self.root, text="Backward", width=25, bg=BTN, fg=FG_MUTED,
                   activebackground=BTN_ACTIVE, font=("Arial", 10), relief="flat",
                   command=self.show_login_screen).place(relx=0.5, rely=0.94, anchor="center")
+
+    # * shared UI DESIGN for all screens --- finish * #
+    # * shared UI DESIGN for all screens --- finish * #
 
     # * UI DESIGN + Logic of 'Log In' screen * #
     # * UI DESIGN + Logic of 'Log In' screen * #
@@ -141,7 +144,7 @@ class ATMApp:
         exit_btn.pack(pady=5)
         exit_btn.config(command=self.handle_exit)
 
-        self._add_logout_button()
+        self.shared_log_out_backward_button()
     # * UI DESIGN of 'user Menu' screen - no logic -----finish * #
     # * UI DESIGN of 'user Menu' screen - no logic -----finish * #
 
@@ -380,7 +383,7 @@ class ATMApp:
                                       command=self.handle_block_account)
         block_account_btn.pack(pady=5)
 
-        self._add_logout_button()
+        self.shared_log_out_backward_button()
 
     # * UI of 'Admin Zone' screen -----finish * #
     # * UI of 'Admin Zone' screen -----finish * #
