@@ -146,8 +146,7 @@ class LogPage(ttk.Frame):
         return frame_outside
 
 
-def load_basic_ui():
-    ui.ATMApp().run()
+
 
 
 def load_basic_ui_and_call_history():
@@ -318,7 +317,8 @@ class LoginPage(ttk.Frame):
             self,
             text="Admin",
             style="Login.TButton",
-            cursor="hand2"
+            cursor="hand2",
+            command=self.handle_admin
         )
         self.admin_button.pack(pady=(0, 8), padx=62, fill="x", anchor="w")
 
@@ -350,3 +350,7 @@ class LoginPage(ttk.Frame):
                 print(login[1])
         else:
             print("invalid input")
+
+    def handle_admin(self):
+        self.controller.destroy()
+        ui.ATMApp().run()
