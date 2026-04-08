@@ -80,6 +80,9 @@ class Account:
             })
 
     def actions_log_to_dictionary(self) -> dict[int, dict]:
+        """function that later use to convert list to json DataBase
+        json can work with dict, but not with objects like 'datetime'
+        so here convert it string, and store as dict"""
         actions_log_dictionary: dict[int, dict] = {}
         for index, action in enumerate(self.actions_log):
             key = index

@@ -4,14 +4,15 @@
 problem: json can only work with basic data types as Dict. so we must convert.
 the other 2 functions are helper's to convert Bank obj to dict and dict to Bank obj"""
 
-## ! our design - in UI must use "save_data(bank)" after every action.
+# ! our design - in UI must use "save_data(bank)" after every action.
 
 import json
 import datetime as dt
 from models import Bank, Account
 
 
-def _bank_to_dict(bank: Bank) -> dict:
+def _bank_obj_to_dict(bank: Bank) -> dict:
+    """shorter as we use 'Account.actions_log_to_dictionary' """
     data = {}
     for account_id, account in bank._accounts.items():
         data[str(account_id)] = {
@@ -26,12 +27,14 @@ def _bank_to_dict(bank: Bank) -> dict:
 
 def save_data(bank) -> None:
     """take Bank object, convert to dict, write to 'data.json' """
-    data = _bank_to_dict(bank)
+    data = _bank_obj_to_dict(bank)
     with open("data.json", "w", encoding="utf-8") as file:
         json.dump(data, file)
 
 
 def _dict_to_bank_object(data_as_dict_object: dict) -> Bank:
+    """the main problem that solved here is to take 'time' as string, and convert back to datetime object.
+    cannot store at json complex objects like datetime. so it stored as str and now convert to obj again"""
     bank = Bank()
     for account_id_str, account_data in data_as_dict_object.items():
         account_id = int(account_id_str)
