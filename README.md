@@ -13,14 +13,14 @@ DevOps ATM Machine/
 │
 ├── .venv/               # virtual environment
 ├── Images/              # assets (icons, graphics)
-├── Tests/               # unit tests for individual components
+├── Tests/               # unit tests
 │
-├── main.py              # starts the entire app
-├── models.py            # logic — Account & Bank classes
+├── main.py              # starts app
+├── models.py            # logic — account & bank classes
 ├── storage.py           # read & writes to "data.json" (create new if not exist)
 ├── ui.py                # minimal functional UI
 ├── figma_ui.py          # Figma-designed UI (advanced layout, currently have 2-pages)
-├── style.py             # color & font constants
+├── style.py             # color & font const
 │
 ├── .env                 # admin secret password (not tracked)
 ├── .gitignore           # ignores .venv, .env, data.json
