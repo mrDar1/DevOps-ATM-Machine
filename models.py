@@ -154,9 +154,21 @@ class Bank:
 
     @staticmethod
     def is_admin_pin(entered_password) -> bool:
-        """deal with hash password from .env"""
-        secret_hash = os.getenv("ADMIN_SECRET_PASS")
-        if not entered_password or not secret_hash:
+        """function compare admin password at .env file to user entered one:
+        is verastile function:
+        can work with regular plaintext password or hashed.
+        to create hash password to store at .env, run at CLI:
+        $ python3 -c "import hashlib; print(hashlib.sha256(b'YOUR_CHOSEN_PASS_HERE').hexdigest())"
+        and the output hash, will be something like:
+        9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0
+        store it at .env"""
+        env_admin_pass = os.getenv("ADMIN_SECRET_PASS")
+        if not entered_password or not env_admin_pass:
             return False
-        entered_hash = hashlib.sha256(entered_password.encode()).hexdigest()
-        return entered_hash == secret_hash
+
+        is_correct_pass = False
+
+        hashed_entered_password = hashlib.sha256(entered_password.encode()).hexdigest()
+        is_correct_pass = (env_admin_pass == hashed_entered_password) or (env_admin_pass == env_admin_pass)
+
+        return is_correct_pass
