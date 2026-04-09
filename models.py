@@ -156,7 +156,7 @@ class Bank:
     @staticmethod
     def is_admin_pin(entered_password: str) -> bool:
         """function compare admin password at '.env' file and user entered one:
-        is verastile function:
+        is versatile function:
         can work with plaintext password or hashed password.
         to create hash password to store at '.env', run at CLI:
         $ python3 -c "import hashlib; print(hashlib.sha256(b'YOUR_CHOSEN_PASS_HERE').hexdigest())"
