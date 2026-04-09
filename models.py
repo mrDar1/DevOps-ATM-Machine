@@ -2,6 +2,7 @@ import datetime as dt
 import random as rd
 import os
 import hashlib
+import hmac
 
 from dotenv import load_dotenv
 
@@ -153,8 +154,8 @@ class Bank:
         return account_id
 
     @staticmethod
-    def is_admin_pin(entered_password) -> bool:
-        """function compare admin password at .env file to user entered one:
+    def is_admin_pin(entered_password: str) -> bool:
+        """function compare admin password at '.env' file and user entered one:
         is verastile function:
         can work with regular plaintext password or hashed.
         to create hash password to store at .env, run at CLI:
@@ -166,9 +167,14 @@ class Bank:
         if not entered_password or not env_admin_pass:
             return False
 
-        is_correct_pass = False
-
         hashed_entered_password = hashlib.sha256(entered_password.encode()).hexdigest()
-        is_correct_pass = (env_admin_pass == hashed_entered_password) or (env_admin_pass == env_admin_pass)
 
+        is_correct_pass = (
+            hmac.compare_digest(env_admin_pass, hashed_entered_password) or
+            hmac.compare_digest(env_admin_pass, entered_password)  # plaintext fallback
+        )
+        # hmac - prevent timing side-channel attack:
+        # Comparing "aaa..." (100 chars wrong) takes longer than comparing "z..." (1 char wrong)
+        # An attacker can measure response times to guess the secret one character at a time
+        # It compares two strings in constant time — it always checks every character regardless of where the first mismatch is. The comparison time reveals nothing about the secret.
         return is_correct_pass
