@@ -2,13 +2,21 @@
 right now, beutiful Figma has 2 ready screens,
 other than that will jump to basic UI (when press admin zone button)"""
 
-# basic UI
+# option 1: basic UI
 # import ui
-# ui.ATMApp().run()
+# if __name__ == "__main__":
+#     ui.ATMApp().run()
 
-# Figma Design UI
+
+# option 2: Figma Design UI (start as Figma and jump to basic_ui when press on admin zone button)
 import storage
 import figma_ui
 
-bank = storage.load_data()
-figma_ui.ATMApp(bank).mainloop()
+
+def main():
+    bank = storage.load_data()
+    figma_ui.ATMApp(bank).mainloop()
+
+
+if __name__ == "__main__":
+    main()
